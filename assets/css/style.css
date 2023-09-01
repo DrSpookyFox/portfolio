@@ -1,6 +1,10 @@
 #main {
   height: 100vh;
 }
+
+.darkmodeBGcolor {
+  background-color: #121212;
+}
 .d-none {
   display: none;
 }
@@ -51,7 +55,6 @@
   }
 }
 
-
 .b-example-divider {
   height: 3rem;
   background-color: rgba(0, 0, 0, 0.1);
@@ -92,14 +95,65 @@
 
 .hero-img {
   border-radius: 30px;
-
 }
-.bg-secondary{
-  --bs-bg-opacity: .19;
+.bg-secondary {
+  --bs-bg-opacity: 0.19;
 }
 
-#worksection{
+#worksection {
   border-radius: 5px;
+}
+
+.techstack_imgs {
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.techstacktitle {
+  margin-top: 50px;
+}
+
+.techstack_imgs > img {
+  height: 50px;
+  max-width: fit-content;
+  padding: 5px;
   
 }
 
+#html5logo,
+#jestLogo {
+  height: 45px;
+}
+
+#mongoDB{
+  max-height: 40px;
+}
+.contact_links {
+  margin-top: 13px;
+  margin-bottom: 30px;
+  align-items: flex-start;
+}
+
+.contact_links > a > img {
+  height: 45px;
+  padding: 3px;
+}
+
+.highEmphasis {
+  color: #ffffff;
+  opacity: 87%;
+}
+
+.mediumEmphasis {
+  color: #ffffff;
+  opacity: 60%;
+}
+
+p, h5, h4, h3, h2, h1,ul, a {
+  color: #ffffff;
+  opacity: 87%;
+}
+
+.btn{
+  margin-top: 35px;
+  margin-bottom: 10px;
+}
