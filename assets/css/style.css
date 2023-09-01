@@ -116,7 +116,6 @@
   height: 50px;
   max-width: fit-content;
   padding: 5px;
-  
 }
 
 #html5logo,
@@ -124,7 +123,7 @@
   height: 45px;
 }
 
-#mongoDB{
+#mongoDB {
   max-height: 40px;
 }
 .contact_links {
@@ -148,12 +147,35 @@
   opacity: 60%;
 }
 
-p, h5, h4, h3, h2, h1,ul, a {
+p,
+h5,
+h4,
+h3,
+h2,
+h1,
+ul,
+a {
   color: #ffffff;
   opacity: 87%;
 }
 
-.btn{
+.btn {
   margin-top: 35px;
   margin-bottom: 10px;
 }
+
+.card-text {
+  margin-top: 20px;
+}
+ .project_tech_stack{
+  
+  align-items: center;
+ }
+
+ .project_tech_stack > img{
+  height:20px;
+ }
+
+ .experience_photo{
+  border-radius: 30px;
+ }
