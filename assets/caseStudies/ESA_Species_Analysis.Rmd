@@ -1,0 +1,188 @@
+---
+title: "ESA Species Analysis"
+Author: Alexander Singer
+Date: 3/14/2024
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+Introduction:
+  We have been tasked by the ESA  with discovering the impacts of listing the Atlantic Salmon. Atlantic are species that spend most of their life cycle in the ocean and migrate upstream in rivers to spawn. We will be using data collected by the ESA to determine whether populations of Atlantic Salmon have recovered since being listed on the ESA.
+  
+The ESA outlines dams and road stream crossings, regulatory mechanisms for dams, climate change, low marine survival, and loss of genetic diversity as threats to Atlantic Salmon populations. 
+
+Criteria to move from endangered to threatened would include: abundance of annual return of 1,500 adults,positive mean growth rate greater than one in the 10-year period preceding reclassification, and habitat of minimum of 7,500 units of accessible and suitable spawning.
+
+```{r Loading the data from the ESA}
+ESA <- read.csv("S1 Dataset.csv")
+```
+
+The below code reveals which species are on the marine ESA list. 
+```{r Find all the common names of ESA list}
+unique(ESA$Common.Name)
+```
+
+```{r load packages}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+Let's pull up the Anadromous fish:
+
+```{r view Anadromous fish}
+AF <- ESA[ESA$Taxa == "Anadromous fish", ]
+```
+
+
+```{r Now to take a closer look at Atlantic Salmon and get some insights}
+salmon <- ESA[ESA$Common.Name == "Atlantic salmon", ]
+```
+
+There are three different measuring units for the salmon: returning adults (total), wild born returning adults, and hatchery born returning adults. We can graph all three measurements to gather some insights on the population level changes
+
+```{r graphing different measures of Atlantic Salmon populations per year }
+ggplot(salmon, aes(x= Time, y = Estimate, colour= Measure_Unit)) +
+  geom_line()
+```
+
+Now we will make the graph more readable by excluding the different measurement units and adding when the ESA was enacted:
+
+```{r we only want to take a look at the total number of returning adults}
+ASR <- salmon[salmon$Measure_Unit == "Returning adults", ]
+```
+
+
+```{r install packages}
+install.packages("hrbrthemes", repos="hrbrthemes_0.8.7.tar.gz")
+library(hrbrthemes)
+```
+
+
+```{r graphing Atlantic Salmon populations per year }
+
+ggplot(ASR, aes(x= Time, y = Estimate)) +
+  labs( x = "Year", y = "Esitmated Population",
+        title = "Atlantic Salmon Population") +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = 2000, lty = 3) +
+  geom_text(aes(x=2000.5, y=2000, 
+                  label="ESA"),
+                  size=3, angle=90, colour = 2, alpha=0.3) +
+  scale_x_continuous(breaks=seq(1995,2020,5)) +
+  scale_y_continuous(breaks=seq(0,5000,500)) +
+  theme_ipsum(axis_title_size = 11)
+```
+
+The National Marine Fisheries Service was cited with supplying the data for the ESA. Let's add those data points in to get a further view of the impact of the ESA:
+
+```{r Loading the data from the ASPEPR}
+salmon_current <- read.csv("Atlantic Salmon Population Esitimate in the Penobscot River - Sheet1.csv")
+View(salmon_current)
+```
+
+```{r graphing Atlantic Salmon populations per year with ESA date}
+
+ggplot(salmon_current, aes(x= Time, y = Estimate)) +
+  labs( x = "Year", y = "Esitmated Population",
+        title = "Atlantic Salmon Population") +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = 2000, lty = 3) +
+  geom_text(aes(x=2000.5, y=2000, 
+                  label="ESA"),
+                  size=3, angle=90, colour = 2, alpha=0.3)+
+  scale_x_continuous(breaks=seq(1995,2020,5)) +
+  scale_y_continuous(breaks=seq(0,5000,500)) +
+  theme_ipsum(axis_title_size = 11)
+```
+
+
+```{r}
+png(filename = "./Desktop/projects/capstone_project/ReturningAdultSalmon.png")
+```
+
+We can see that there was a sharp decline in the population until 2000 and then there has been an increase until a drastic drop in 2012. So for about a decade after Atlantic Salmon were put in the ESA, their population levels increased steadily. 
+
+Part of the restoration plan proposed in 2009 included Dam removal. Dams not only physically stop the migration of salmon, they also cause harmful temperature changes in the river, lessen the amount of habitat provided by dead trees, and also widen the river which exposes salmon when they are vulnerable during the mating season
+
+According to the The Penobscot River Restoration Project Here are three major milestones for dam removal and salmon river connectivity: 
+
+2012: Great Works Dam was removed.
+
+2013: Veazie Dam removal
+
+2016: Howland bypass was completed.
+
+```{r graphing Atlantic Salmon populations per year with dam removals}
+
+ggplot(salmon_current, aes(x= Time, y = Estimate)) +
+  labs( x = "Year", y = "Esitmated Population",
+        title = "Atlantic Salmon Population") +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = 2000, lty = 3) +
+  geom_vline(xintercept = 2012, lty = 3) +
+  geom_vline(xintercept = 2013, lty = 3) +
+  geom_vline(xintercept = 2016, lty = 3) +
+  geom_text(aes(x=2000.5, y=2000, 
+                  label="ESA"),
+                  size=3, angle=90, colour = 2, alpha=0.3)+
+  geom_text(aes(x=2012.5, y=2000, 
+                  label="Great Works Dam removed"),
+                  size=3, angle=90, colour = 1, alpha=0.3)+
+  geom_text(aes(x=2013.5, y=2000, 
+                  label="Veazie Dam removed"),
+                  size=3, angle=90, colour = 1, alpha=0.3)+
+   geom_text(aes(x=2016.5, y=2000, 
+                  label="Howland bypass was completed"),
+                  size=3, angle=90, colour = 1, alpha=0.3)+
+  scale_x_continuous(breaks=seq(1995,2020,5)) +
+  scale_y_continuous(breaks=seq(0,5000,500)) +
+  theme_ipsum(axis_title_size = 11)
+```
+
+
+Conclusions:
+  Salmon had a recovery period after being protected by the ESA, however not enough to be delisted. Salmon populations are still at a critically low abundance. Growth rate has improved and there is evidence that there is a viable population. 
+
+  Still remains a serious threat, is the lack of individuals returning after breeding because it decreases population and genetic fitness. Lack of genetic fitness lessens salmon's ability to respond to catastrophic events and development of adaptive traits.
+
+  Despite the removal of two dams and the decommissioning of a third, dam owners enhanced hydropower production at six dams situated in and around the Penobscot region, maintaining energy generation at levels comparable to previous ones. The measures in removing obstructions to the fish migration and more regulatory measures have been correlated with an increase in fish population. Creating more connectivity between spawning grounds is recommending for the ESA to continue to prioritize 
+  
+Considerations:
+
+  1. Salmon populations were measured only in US waters, although their habitat extends to Greenland. The ESA is largely only enforced within the US and Salmon could have been impacted in international waters. Further research into Salmon populations in international waters could explain recent declines in population.
+
+  2. More data of the genetic diversity of salmon could provide clearer insights on the current state of salmon, the effectiveness of introducing hatchery born salmon, and the success of integrated hatchery programs (i.e. hatchery and wild fish bred for reintroduction)
+  
+  
+Citations: 
+
+  Title : Annual Report of the U.S. Atlantic Salmon Assessment Committee : Report no. 35, 2022     Activities
+  Corporate Authors(s) : Atlantic Salmon Commission (U.S.).;North Atlantic Salmon Conservation     Organization.;Northeast Fisheries Science Center (U.S.);
+  Conference Author(s) : U.S. Atlantic Salmon Assessment Committee Meeting (2023)
+  Published Date : 2023
+  DOI : https://doi.org/10.25923/skxm-wk46
+  
+
+  Title: Marine mammals and sea turtles listed under the U.S. Endangered Species Act are recovering
+  Valdivia A, Wolf S, Suckling K (2019) Marine mammals and sea turtles listed under the U.S. Endangered Species Act are recovering. PLOS ONE 14(1): e0210164. https://doi.org/10.1371/journal.pone.0210164
+
+
+Title: Atlantic Salmon 5-Year Review
+U.S. Department of Commerce, National Oceanic and Atmospheric Administration, National Marine Fisheries Service
+Publish Date: 2023
+https://www.fisheries.noaa.gov/resource/document/atlantic-salmon-5-year-review
+
+
+
+    
+
+
